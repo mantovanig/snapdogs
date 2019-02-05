@@ -8,28 +8,27 @@
  */
 
 import React, {Component} from 'react';
-import {Platform} from 'react-native';
 
 // styled
-import { ContainerView, WelcomeText, InstructionsText } from './styleds';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import { HomeView, ImageView, MainImage, BlurredImage } from './styleds';
 
 type Props = {};
 export default class Home extends Component<Props> {
 
+  state = {
+    currentImage: 'https://images.dog.ceo/breeds/affenpinscher/n02110627_5743.jpg'
+  };
+
   render() {
+    const { currentImage } = this.state;
+
     return (
-      <ContainerView>
-        <WelcomeText>Welcome to React Native!</WelcomeText>
-        <InstructionsText>To get started, edit App.js</InstructionsText>
-        <InstructionsText>{instructions}</InstructionsText>
-      </ContainerView>
+      <HomeView>
+        <ImageView>
+          <BlurredImage blurRadius={5} source={{uri: currentImage}} />
+          <MainImage source={{uri: currentImage}} />
+        </ImageView>
+      </HomeView>
     );
   }
 }

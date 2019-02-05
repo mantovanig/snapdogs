@@ -1,20 +1,30 @@
 import styled from 'styled-components/native';
 
-export const ContainerView = styled.View`
+export const HomeView = styled.View`
     flex: 1;
-    justify-content: center;
-    align-items: center;
-    background-color: #F5FCFF;
 `;
 
-export const WelcomeText = styled.Text`
-  font-size: 20px;
-  text-align: center;
-  margin: 10px;
+export const ImageView = styled.View`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 `;
 
-export const InstructionsText = styled.Text`
-  text-align: center;
-  color: #333;
-  margin-bottom: 5px;
+export const MainImage = styled.Image`
+  flex: 1;
+  resize-mode: contain;
+  width: 100%;
+  height: 100%;
+`;
+
+export const BlurredImage = styled.Image`
+  flex: 1;
+  resize-mode: cover;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
 `;

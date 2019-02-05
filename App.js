@@ -8,6 +8,7 @@
  */
 
 import React, {Component} from 'react';
+import { View } from 'react-native';
 
 // containers
 import Home from './containers/Home';
@@ -15,7 +16,11 @@ import Home from './containers/Home';
 type Props = {};
 export default class App extends Component<Props> {
   render() {
-    return <Home />;
+    return (
+      <View style={{ flex: 1 }}>
+        <Home />
+      </View>
+    );
   }
 }
 
