@@ -8,7 +8,10 @@
  */
 
 import React, {Component} from 'react';
+import { Provider } from "react-redux";
 import { View } from 'react-native';
+
+import store from './store';
 
 // containers
 import Home from './containers/Home';
@@ -17,9 +20,11 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Home />
-      </View>
+      <Provider store={store}>
+        <View style={{ flex: 1 }}>
+          <Home />
+        </View>
+      </Provider>
     );
   }
 }

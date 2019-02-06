@@ -8,27 +8,45 @@
  */
 
 import React, {Component} from 'react';
+import { connect } from "react-redux";
+
+// actions
+import { fetchImageRequested } from "./actions";
 
 // styled
 import { HomeView, ImageView, MainImage, BlurredImage } from './styleds';
 
 type Props = {};
-export default class Home extends Component<Props> {
+class Home extends Component<Props> {
 
-  state = {
-    currentImage: 'https://images.dog.ceo/breeds/affenpinscher/n02110627_5743.jpg'
-  };
+  componentDidMount() {
+    const { fetchImage } = this.props;
+
+    fetchImage();
+  }
 
   render() {
-    const { currentImage } = this.state;
+    const { currentImage } = this.props;
 
     return (
       <HomeView>
-        <ImageView>
-          <BlurredImage blurRadius={5} source={{uri: currentImage}} />
-          <MainImage source={{uri: currentImage}} />
-        </ImageView>
+        {currentImage &&
+          <ImageView>
+            <BlurredImage blurRadius={5} source={{uri: currentImage}} />
+            <MainImage source={{uri: currentImage}} />
+          </ImageView>
+        }
       </HomeView>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  currentImage: state.home.currentImage
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchImage: () => dispatch(fetchImageRequested())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
