@@ -9,32 +9,48 @@
 
 import React, {Component} from 'react';
 import { connect } from "react-redux";
+import { ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 
 // actions
 import { fetchImageRequested } from "./actions";
 
 // styled
-import { HomeView, ImageView, MainImage, BlurredImage } from './styleds';
+import { HomeView, HomeViewLoader, ImageView, MainImage, BlurredImage } from './styleds';
 
 type Props = {};
 class Home extends Component<Props> {
 
   componentDidMount() {
-    const { fetchImage } = this.props;
-
-    fetchImage();
+    this.fetchImage();
   }
 
+  onNextImage = () => {
+    this.fetchImage();
+  };
+
+  fetchImage = () => {
+    const { handleFetchImage } = this.props;
+    handleFetchImage();
+  };
+
   render() {
-    const { currentImage } = this.props;
+    const { currentImage, loading } = this.props;
+
+    if (loading) return (
+      <HomeViewLoader>
+        <ActivityIndicator size="large" color="#000" />
+      </HomeViewLoader>
+    );
 
     return (
       <HomeView>
         {currentImage &&
-          <ImageView>
-            <BlurredImage blurRadius={5} source={{uri: currentImage}} />
-            <MainImage source={{uri: currentImage}} />
-          </ImageView>
+          <TouchableWithoutFeedback onPress={this.onNextImage}>
+            <ImageView>
+                <BlurredImage blurRadius={5} source={{uri: currentImage}} />
+                <MainImage source={{uri: currentImage}} />
+            </ImageView>
+          </TouchableWithoutFeedback>
         }
       </HomeView>
     );
@@ -42,11 +58,12 @@ class Home extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  currentImage: state.home.currentImage
+  currentImage: state.home.currentImage,
+  loading: state.home.loading
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchImage: () => dispatch(fetchImageRequested())
+  handleFetchImage: () => dispatch(fetchImageRequested())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
