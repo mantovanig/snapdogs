@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 
 // actions
-import { fetchImageRequested } from "./actions";
+import { fetchImageRequested, initialDataRequested } from "./actions";
 
 // styled
 import { HomeView, HomeViewLoader, ImageView, MainImage, BlurredImage } from './styleds';
@@ -21,7 +21,8 @@ type Props = {};
 class Home extends Component<Props> {
 
   componentDidMount() {
-    this.fetchImage();
+    const { handleFetchInitialData } = this.props;
+    handleFetchInitialData();
   }
 
   onNextImage = () => {
@@ -29,8 +30,8 @@ class Home extends Component<Props> {
   };
 
   fetchImage = () => {
-    const { handleFetchImage } = this.props;
-    handleFetchImage();
+    const { handleFetchImage, selectedBreed } = this.props;
+    handleFetchImage(selectedBreed);
   };
 
   render() {
@@ -58,12 +59,14 @@ class Home extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  currentImage: state.home.currentImage,
+  currentImage: state.home.image,
+  selectedBreed: state.home.selectedBreed,
   loading: state.home.loading
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleFetchImage: () => dispatch(fetchImageRequested())
+  handleFetchImage: (breed) => dispatch(fetchImageRequested(breed)),
+  handleFetchInitialData: () => dispatch(initialDataRequested())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
