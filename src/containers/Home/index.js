@@ -1,15 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
-
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { ActivityIndicator, TouchableWithoutFeedback } from "react-native";
+import { ActivityIndicator } from "react-native";
 import _isEmpty from "lodash/isEmpty";
 
 // actions
@@ -21,18 +13,23 @@ import {
 
 // components
 import BreedPicker from "../../components/BreedPicker";
+import DogImage from "../../components/DogImage";
 
 // styled
 import {
   HomeView,
-  HomeViewLoader,
-  ImageView,
-  MainImage,
-  BlurredImage
+  HomeViewLoader
 } from "./styleds";
 
-type Props = {};
-class Home extends Component<Props> {
+class Home extends Component {
+  static propTypes = {
+    currentImage: PropTypes.string,
+    selectedBreed: PropTypes.object,
+    breeds: PropTypes.array,
+    imageLoading: PropTypes.bool,
+    loading: PropTypes.bool
+  };
+
   componentDidMount() {
     const { handleFetchInitialData } = this.props;
     handleFetchInitialData();
@@ -51,6 +48,7 @@ class Home extends Component<Props> {
     const {
       currentImage,
       loading,
+      imageLoading,
       breeds,
       selectedBreed,
       handleUpdateBreed,
@@ -76,14 +74,11 @@ class Home extends Component<Props> {
             onSubmit={() => handleFetchImage(selectedBreed)}
           />
         )}
-        {currentImage && (
-          <TouchableWithoutFeedback onPress={this.onNextImage}>
-            <ImageView>
-              <BlurredImage blurRadius={5} source={{ uri: currentImage }} />
-              <MainImage source={{ uri: currentImage }} />
-            </ImageView>
-          </TouchableWithoutFeedback>
-        )}
+        <DogImage
+          image={currentImage}
+          loading={imageLoading}
+          onPress={this.onNextImage}
+        />
       </HomeView>
     );
   }
@@ -93,6 +88,7 @@ const mapStateToProps = state => ({
   currentImage: state.home.image,
   selectedBreed: state.home.selectedBreed,
   breeds: state.home.breeds,
+  imageLoading: state.home.imageLoading,
   loading: state.home.loading
 });
 

@@ -72,7 +72,6 @@ class BreedPicker extends PureComponent {
   render() {
     const { showPicker } = this.state;
     const { breeds, selectedBreed } = this.props;
-    console.log('BreedPicker render');
 
     return (
       <BreedPickerView>
