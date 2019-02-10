@@ -13,14 +13,16 @@ export const BreedPickerView = styled.View`
 
 export const BreedPickerSubmit = styled.View`
   background: #fbfbfb;
-  border-radius: 10px;
+  border-radius: 100px;
   justify-content: center;
   align-items: center;
   padding: 20px 0;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 `;
 
 export const BreedLabel = styled.Text`
   font-size: 18px;
+  color: #000;
 `;
 
 export const BreedItem = styled.View`
@@ -36,7 +38,7 @@ export const BreedItemText = styled.Text`
 
 export const BreedsList = styled.FlatList`
   background: #fbfbfb;
-  border-radius: 10px;
+  border-radius: 40px;
   margin-bottom: 12px;
   height: 300px;
 `;
