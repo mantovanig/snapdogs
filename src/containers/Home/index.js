@@ -87,8 +87,8 @@ class Home extends Component {
             selectedBreed={selectedBreed}
             onChangeBreed={item => {
               handleUpdateBreed(item);
+              handleFetchImage(item);
             }}
-            onSubmit={() => handleFetchImage(selectedBreed)}
           />
         )}
         <DogImage

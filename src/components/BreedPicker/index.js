@@ -1,105 +1,77 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { TouchableHighlight, TouchableOpacity } from "react-native";
-import * as Animatable from "react-native-animatable";
+import { TouchableOpacity, Text, KeyboardAvoidingView, Keyboard } from "react-native";
+
 
 // styled
 import {
   BreedPickerView,
-  BreedsList,
-  BreedPickerSubmit,
-  BreedItem,
-  BreedItemText,
-  BreedLabel,
+  BreedAutocompleteInput,
+  BreedSuggestion,
   BreedItemSeparator,
-  BREED_ITEM_HEIGHT,
-  BREED_ITEM_SEPARATOR
 } from "./styleds";
-
-const BreedListAnimated = Animatable.createAnimatableComponent(BreedsList);
-
-class BreedOption extends React.PureComponent {
-  render() {
-    const { onPressItem, selected } = this.props;
-    return (
-      <TouchableOpacity onPress={onPressItem}>
-        <BreedItem selected={selected}>
-          <BreedItemText selected={selected}>{this.props.title}</BreedItemText>
-        </BreedItem>
-      </TouchableOpacity>
-    );
-  }
-}
 
 class BreedPicker extends PureComponent {
   static propTypes = {
     breeds: PropTypes.array.isRequired,
     selectedBreed: PropTypes.object,
     onChangeBreed: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
   };
 
   state = {
-    showPicker: false
+    query: '',
   };
 
-  _keyExtractor = item => item.value;
-
-  onSubmit = () => {
-    const { onSubmit } = this.props;
-    const { showPicker } = this.state;
-
-    if (!showPicker) this.setState({ showPicker: true });
-    else {
-      this.setState(
-        {
-          showPicker: false
-        },
-        () => onSubmit()
-      );
+  filterBreeds = (query) => {
+    if (query === '') {
+      return [];
     }
+
+    const { breeds } = this.props;
+    const regex = new RegExp(`${query.trim()}`, 'i');
+    return breeds.filter(breed => breed.label.search(regex) >= 0);
   };
 
-  _renderItem = ({ item }) => (
-    <BreedOption
-      id={item.value}
-      onPressItem={() => this.props.onChangeBreed(item)}
-      selected={this.props.selectedBreed.value === item.value}
-      title={item.label}
-    />
-  );
+  onSubmit = (item) => {
+    const { onChangeBreed } = this.props;
+
+    this.setState({
+      query: item.label
+    }, () => {
+      Keyboard.dismiss();
+      onChangeBreed(item);
+    });
+  };
 
   render() {
-    const { showPicker } = this.state;
-    const { breeds, selectedBreed } = this.props;
+    const { query } = this.state;
+    const breeds = this.filterBreeds(query);
+
+    // TODO: move this to utils
+    const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
 
     return (
       <BreedPickerView>
-        {showPicker && (
-          <BreedListAnimated
-            animation="fadeInUp"
-            duration={300}
-            easing="ease-in"
-            useNativeDriver
-            ItemSeparatorComponent={() => <BreedItemSeparator />}
-            initialScrollIndex={breeds.findIndex(
-              e => e.value === selectedBreed.value
+        <KeyboardAvoidingView behavior="padding" enabled={false}>
+          <BreedAutocompleteInput
+            listContainerStyle={{ marginTop: 10 }}
+            listStyle={{ borderWidth: 0, borderRadius: 10 }}
+            autoCapitalize="none"
+            data={breeds.length === 1 && comp(query, breeds[0].label) ? [] : breeds}
+            defaultValue={query}
+            placeholder="Search an other breed"
+            inputContainerStyle={{ borderWidth: 0 }}
+            onChangeText={text => this.setState({ query: text })}
+            renderSeparator={() => <BreedItemSeparator />}
+            renderItem={item => (
+              <TouchableOpacity onPress={() => this.onSubmit(item)}>
+                <BreedSuggestion>
+                  <Text>{item.label}</Text>
+                </BreedSuggestion>
+              </TouchableOpacity>
             )}
-            getItemLayout={(data, index) => ({
-              length: BREED_ITEM_HEIGHT,
-              offset: (BREED_ITEM_HEIGHT + BREED_ITEM_SEPARATOR) * index,
-              index
-            })}
-            data={breeds}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderItem}
           />
-        )}
-        <TouchableHighlight onPress={this.onSubmit}>
-          <BreedPickerSubmit>
-            <BreedLabel>{showPicker ? "DONE" : selectedBreed.label}</BreedLabel>
-          </BreedPickerSubmit>
-        </TouchableHighlight>
+        </KeyboardAvoidingView>
       </BreedPickerView>
     );
   }
