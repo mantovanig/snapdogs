@@ -74,7 +74,11 @@ class Home extends Component {
           <ErrorLabel>Ops. An error occurred.</ErrorLabel>
           <ErrorLabel>Please try again.</ErrorLabel>
           <ErrorCta>
-            <Button title="RETRY" color="#000" onPress={() => handleFetchInitialData()} />
+            <Button
+              title="RETRY"
+              color="#000"
+              onPress={() => handleFetchInitialData()}
+            />
           </ErrorCta>
         </HomeViewError>
       );

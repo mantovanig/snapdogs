@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 import Autocomplete from 'react-native-autocomplete-input';
 
@@ -8,7 +9,7 @@ export const BREED_ITEM_SEPARATOR = 1;
 
 export const BreedPickerView = styled.View`
   position: absolute;
-  top: 50px;
+  top: ${getStatusBarHeight(true) + 30}px;
   align-self: center;
   width: 90%;
   z-index: 999;
