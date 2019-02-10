@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Button } from "react-native";
 import _isEmpty from "lodash/isEmpty";
 
 // actions
@@ -18,6 +18,9 @@ import DogImage from "../../components/DogImage";
 // styled
 import {
   HomeView,
+  HomeViewError,
+  ErrorLabel,
+  ErrorCta,
   HomeViewLoader
 } from "./styleds";
 
@@ -27,7 +30,8 @@ class Home extends Component {
     selectedBreed: PropTypes.object,
     breeds: PropTypes.array,
     imageLoading: PropTypes.bool,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    error: PropTypes.bool
   };
 
   componentDidMount() {
@@ -51,7 +55,9 @@ class Home extends Component {
       imageLoading,
       breeds,
       selectedBreed,
+      error,
       handleUpdateBreed,
+      handleFetchInitialData,
       handleFetchImage
     } = this.props;
 
@@ -60,6 +66,17 @@ class Home extends Component {
         <HomeViewLoader>
           <ActivityIndicator size="large" color="#000" />
         </HomeViewLoader>
+      );
+
+    if (error)
+      return (
+        <HomeViewError>
+          <ErrorLabel>Ops. An error occurred.</ErrorLabel>
+          <ErrorLabel>Please try again.</ErrorLabel>
+          <ErrorCta>
+            <Button title="RETRY" color="#000" onPress={() => handleFetchInitialData()} />
+          </ErrorCta>
+        </HomeViewError>
       );
 
     return (
@@ -89,6 +106,7 @@ const mapStateToProps = state => ({
   selectedBreed: state.home.selectedBreed,
   breeds: state.home.breeds,
   imageLoading: state.home.imageLoading,
+  error: state.home.error,
   loading: state.home.loading
 });
 
