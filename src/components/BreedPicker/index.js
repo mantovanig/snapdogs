@@ -67,6 +67,7 @@ class BreedPicker extends PureComponent {
           }
           defaultValue={query}
           placeholder="Search an other breed"
+          placeholderTextColor="#000"
           inputContainerStyle={{ borderWidth: 0 }}
           onChangeText={text => this.setState({ query: text })}
           renderSeparator={() => <BreedItemSeparator />}
